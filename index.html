@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Clicker Clone</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0e5d8;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    #game {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #cookie-container {
+        position: relative;
+    }
+    #cookie {
+        width: 200px;
+        cursor: pointer;
+    }
+    #stats {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+    #buildings {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 600px;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .building {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #fff5e6;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        width: 100px;
+        cursor: pointer;
+        transition: transform 0.1s;
+    }
+    .building:hover {
+        transform: scale(1.05);
+    }
+    .building-name {
+        font-weight: bold;
+    }
+    .building-count {
+        margin-top: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div id="game">
+    <div id="cookie-container">
+        <img id="cookie" src="cookie.webp" alt="Cookie">
+    </div>
+    <div id="stats">
+        Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0</span>
+    </div>
+    <div id="buildings"></div>
+</div>
+
+<script>
+// Building data (same as original Cookie Clicker costs and CPS)
+const buildings = [
+    { name: "Cursor", cost: 15, cps: 0.1, count: 0 },
+    { name: "Grandma", cost: 100, cps: 1, count: 0 },
+    { name: "Farm", cost: 1100, cps: 8, count: 0 },
+    { name: "Factory", cost: 12000, cps: 47, count: 0 },
+    { name: "Mine", cost: 130000, cps: 260, count: 0 },
+    { name: "Shipment", cost: 1400000, cps: 1400, count: 0 },
+    { name: "Alchemy Lab", cost: 20000000, cps: 7800, count: 0 },
+    { name: "Portal", cost: 330000000, cps: 44000, count: 0 },
+    { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 }
+];
+
+let cookies = 0;
+let cps = 0;
+
+// Generate building buttons
+const buildingsDiv = document.getElementById('buildings');
+
+function updateBuildings() {
+    buildingsDiv.innerHTML = '';
+    buildings.forEach((b, index) => {
+        const div = document.createElement('div');
+        div.className = 'building';
+        div.innerHTML = `<div class="building-name">${b.name}</div>
+                         <div>Cost: ${Math.floor(b.cost)}</div>
+                         <div class="building-count">Owned: ${b.count}</div>`;
+        div.onclick = () => buyBuilding(index);
+        buildingsDiv.appendChild(div);
+    });
+}
+
+// Buy building
+function buyBuilding(index) {
+    const b = buildings[index];
+    if (cookies >= b.cost) {
+        cookies -= b.cost;
+        b.count++;
+        b.cost = Math.floor(b.cost * 1.15); // cost increase like original
+        updateCPS();
+        updateDisplay();
+        updateBuildings();
+    }
+}
+
+// Update CPS
+function updateCPS() {
+    cps = buildings.reduce((sum, b) => sum + b.cps * b.count, 0);
+}
+
+// Update display
+function updateDisplay() {
+    document.getElementById('cookies').innerText = Math.floor(cookies);
+    document.getElementById('cps').innerText = cps.toFixed(1);
+}
+
+// Cookie click
+document.getElementById('cookie').onclick = () => {
+    cookies++;
+    updateDisplay();
+}
+
+// Auto CPS increment
+setInterval(() => {
+    cookies += cps / 10;
+    updateDisplay();
+}, 100);
+
+// Initial setup
+updateBuildings();
+updateDisplay();
+</script>
+
+</body>
+</html>
