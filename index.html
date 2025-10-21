@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie Clicker Clone</title>
     <style>
-        /* Loading Screen Styles */
+        /* Loading Screen */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -39,7 +39,7 @@
             background-size: cover;
             font-family: 'Arial', sans-serif;
             color: #333;
-            display: none; /* Hide content initially */
+            display: none;
         }
         #game-container {
             display: flex;
@@ -61,10 +61,11 @@
         #cookie {
             width: 200px;
             cursor: pointer;
-            transition: transform 0.1s ease;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
         }
         #cookie:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
         #stats {
             font-size: 20px;
@@ -104,6 +105,25 @@
             display: flex;
             flex-direction: column;
         }
+        .floating-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: #ffcc00;
+            animation: floatUp 2s forwards;
+        }
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) translateY(-50px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -119,7 +139,7 @@
                 <img id="cookie" src="Cookie.webp" alt="Cookie">
             </div>
             <div id="stats">
-                Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0</span>
+                Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0.1</span>
             </div>
         </div>
         <div id="buildings-panel"></div>
@@ -208,6 +228,13 @@
                 clickSound.currentTime = 0;
                 clickSound.play();
                 lastClickTime = currentTime;
+
+                // Create floating text
+                const floatingText = document.createElement('div');
+                floatingText.className = 'floating-text';
+                floatingText.innerText = `+1`;
+                document.body.appendChild(floatingText);
+                setTimeout(() => floatingText.remove(), 2000);
             }
         };
 
@@ -221,8 +248,8 @@
 
         // Show loading screen until everything is loaded
         window.onload = () => {
-            document.body.style.display = 'block'; // Show the game content
-            document.getElementById('loading-screen').style.display = 'none'; // Hide the loading screen
+            document.body.style.display = 'block';
+            document.getElementById('loading-screen').style.display = 'none';
         };
     </script>
 </body>
