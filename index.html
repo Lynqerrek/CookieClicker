@@ -1,254 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Clicker Clone</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('Background.jfif') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Clicker Clone</title>
+<style>
+/* Body & Background */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('Background.jfif') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        /* Game Container */
-        #game-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            width: 80%;
-            height: 80%;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
+/* Game Container */
+#game-container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1400px;
+    background: rgba(240, 240, 240, 0.95);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
 
-        /* Left Panel */
-        #left-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 30%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        }
+/* Left Panel */
+#left-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35%;
+    background: #fff8e7;
+    border-radius: 12px;
+    padding: 15px;
+}
 
-        /* Cookie Container */
-        #cookie-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
+/* Cookie */
+#cookie-container { position: relative; margin-bottom: 15px; }
+#cookie {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+#cookie:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #ffd966;
+}
 
-        #cookie {
-            width: 200px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
+/* Stats */
+#stats { text-align: center; font-size: 18px; margin-bottom: 15px; }
 
-        #cookie:hover {
-            transform: scale(1.1);
-        }
+/* Buildings Panel */
+#buildings-panel {
+    width: 60%;
+    background: #fdf2c1;
+    border-radius: 12px;
+    padding: 10px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+.building {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #fff7dc;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.building:hover { background: #ffeeb0; }
+.building-info { display: flex; flex-direction: column; }
+.building-info span { font-size: 13px; }
 
-        /* Stats */
-        #stats {
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        /* Buildings Panel */
-        #buildings-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            width: 65%;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-            height: 100%;
-        }
-
-        .building {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #f9f9f9;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .building:hover {
-            background: #f1f1f1;
-        }
-
-        .building-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .building-info span {
-            font-size: 14px;
-        }
-
-        /* Floating Text */
-        .floating-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5em;
-            color: #ffcc00;
-            animation: floatUp 2s forwards;
-        }
-
-        @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) translateY(-50px);
-            }
-        }
-    </style>
+/* Floating Text */
+.floating-text {
+    position: absolute;
+    font-size: 1.3em;
+    color: #ffcc00;
+    font-weight: bold;
+    pointer-events: none;
+    animation: floatUp 1s forwards;
+}
+@keyframes floatUp {
+    0% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%, -50%) translateY(-40px); }
+}
+</style>
 </head>
 <body>
-    <div id="game-container">
-        <!-- Left Panel -->
-        <div id="left-panel">
-            <div id="cookie-container">
-                <img id="cookie" src="Cookie.webp" alt="Cookie">
-            </div>
-            <div id="stats">
-                <div>Cookies: <span id="cookies">0</span></div>
-                <div>CPS: <span id="cps">0.0</span></div>
-            </div>
+
+<div id="game-container">
+    <div id="left-panel">
+        <div id="cookie-container">
+            <img id="cookie" src="Cookie.webp" alt="Cookie">
         </div>
-
-        <!-- Buildings Panel -->
-        <div id="buildings-panel"></div>
+        <div id="stats">
+            <div>Cookies: <span id="cookies">0</span></div>
+            <div>CPS: <span id="cps">0.0</span></div>
+        </div>
     </div>
+    <div id="buildings-panel"></div>
+</div>
 
-    <script>
-        const buildings = [
-            { name: "Cursor", cost: 15, cps: 0.1, count: 0 },
-            { name: "Grandma", cost: 100, cps: 1, count: 0 },
-            { name: "Farm", cost: 1100, cps: 8, count: 0 },
-            { name: "Factory", cost: 12000, cps: 47, count: 0 },
-            { name: "Mine", cost: 130000, cps: 260, count: 0 },
-            { name: "Shipment", cost: 1400000, cps: 1400, count: 0 },
-            { name: "Alchemy Lab", cost: 20000000, cps: 7800, count: 0 },
-            { name: "Portal", cost: 330000000, cps: 44000, count: 0 },
-            { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 },
-            { name: "Antimatter Condenser", cost: 75000000000, cps: 1400000, count: 0 },
-            { name: "Prism", cost: 1000000000000, cps: 7800000, count: 0 },
-            { name: "Chancemaker", cost: 14000000000000, cps: 44000000, count: 0 },
-            { name: "Fractal Engine", cost: 200000000000000, cps: 260000000, count: 0 },
-            { name: "Javascript Console", cost: 3300000000000000, cps: 1400000000, count: 0 }
-        ];
+<script>
+const buildings = [
+    { name: "Cursor", baseCps: 0.1, cost: 15, count: 0 },
+    { name: "Grandma", baseCps: 1, cost: 100, count: 0 },
+    { name: "Farm", baseCps: 8, cost: 1100, count: 0 },
+    { name: "Factory", baseCps: 47, cost: 12000, count: 0 },
+    { name: "Mine", baseCps: 260, cost: 130000, count: 0 },
+    { name: "Shipment", baseCps: 1400, cost: 1400000, count: 0 },
+    { name: "Alchemy Lab", baseCps: 7800, cost: 20000000, count: 0 },
+    { name: "Portal", baseCps: 44000, cost: 330000000, count: 0 },
+    { name: "Time Machine", baseCps: 260000, cost: 5100000000, count: 0 },
+    { name: "Antimatter Condenser", baseCps: 1400000, cost: 75000000000, count: 0 },
+    { name: "Prism", baseCps: 7800000, cost: 1000000000000, count: 0 },
+    { name: "Chancemaker", baseCps: 44000000, cost: 14000000000000, count: 0 },
+    { name: "Fractal Engine", baseCps: 260000000, cost: 200000000000000, count: 0 },
+    { name: "Javascript Console", baseCps: 1400000000, cost: 3300000000000000, count: 0 }
+];
 
-        let cookies = 0;
-        let cps = 0;
-        let lastClickTime = 0;
+let cookies = 0;
+let cps = 0;
+let lastClickTime = 0;
 
-        const cookiesSpan = document.getElementById('cookies');
-        const cpsSpan = document.getElementById('cps');
-        const cookieImg = document.getElementById('cookie');
-        const buildingsPanel = document.getElementById('buildings-panel');
-        const clickSound = new Audio('ClickSound.mp3');
+const cookiesSpan = document.getElementById('cookies');
+const cpsSpan = document.getElementById('cps');
+const cookieImg = document.getElementById('cookie');
+const buildingsPanel = document.getElementById('buildings-panel');
+const clickSound = new Audio('ClickSound.mp3');
 
-        // Short number formatting
-        function formatNumber(num) {
-            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
-            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
-            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
-            return Math.floor(num);
-        }
+// Short number format
+function formatNumber(num){
+    if(num>=1e9) return (num/1e9).toFixed(1)+"B";
+    if(num>=1e6) return (num/1e6).toFixed(1)+"M";
+    if(num>=1e3) return (num/1e3).toFixed(1)+"k";
+    return Math.floor(num);
+}
 
-        function updateBuildings() {
-            buildingsPanel.innerHTML = '';
-            buildings.forEach((b, index) => {
-                const div = document.createElement('div');
-                div.className = 'building';
-                div.innerHTML = `
-                    <div class="building-info">
-                        <strong>${b.name}</strong>
-                        <span>Owned: ${b.count}</span>
-                        <span>CPS: ${formatNumber(b.cps * b.count)}</span>
-                    </div>
-                    <div>Cost: ${formatNumber(b.cost)}</div>
-                `;
-                div.onclick = () => buyBuilding(index);
-                buildingsPanel.appendChild(div);
-            });
-        }
-
-        function buyBuilding(index) {
-            const b = buildings[index];
-            if (cookies >= b.cost) {
-                cookies -= b.cost;
-                b.count++;
-                b.cost = Math.floor(b.cost * 1.15);
-                updateCPS();
-                updateDisplay();
-                updateBuildings();
-            }
-        }
-
-        function updateCPS() {
-            cps = buildings.reduce((sum, b) => sum + b.cps * b.count, 0);
-        }
-
-        function updateDisplay() {
-            cookiesSpan.innerText = formatNumber(cookies);
-            cpsSpan.innerText = formatNumber(cps);
-        }
-
-        cookieImg.onclick = () => {
-            const currentTime = Date.now();
-            if (currentTime - lastClickTime >= 100) {
-                cookies++;
-                updateDisplay();
-                clickSound.currentTime = 0;
-                clickSound.play();
-                lastClickTime = currentTime;
-
-                // Create floating text
-                const floatingText = document.createElement('div');
-                floatingText.className = 'floating-text';
-                floatingText.innerText = `+1`;
-                document.body.appendChild(floatingText);
-                setTimeout(() => floatingText.remove(), 2000);
-            }
-        };
-
-        setInterval(() => {
-            cookies += cps / 10;
-            updateDisplay();
-        }, 100);
-
-        updateBuildings();
+// Save/load
+function saveGame(){
+    const saveData = { cookies, buildings: buildings.map(b=>({count:b.count,cost:b.cost})) };
+    localStorage.setItem('cookieClickerSave', JSON.stringify(saveData));
+}
+function loadGame(){
+    const saved = JSON.parse(localStorage.getItem('cookieClickerSave'));
+    if(saved){
+        cookies = saved.cookies;
+        buildings.forEach((b,i)=>{b.count = saved.buildings[i].count; b.cost = saved.buildings[i].cost;});
+        updateCPS();
         updateDisplay();
-    </script>
+        updateBuildings();
+    }
+}
+
+// Update CPS
+function updateCPS(){
+    cps = buildings.reduce((sum,b)=>sum+b.baseCps*b.count,0);
+}
+
+// Update Display
+function updateDisplay(){
+    cookiesSpan.innerText = formatNumber(cookies);
+    cpsSpan.innerText = cps.toFixed(1);
+}
+
+// Update Buildings
+function updateBuildings(){
+    buildingsPanel.innerHTML = '';
+    buildings.forEach((b,i)=>{
+        const div=document.createElement('div');
+        div.className='building';
+        div.innerHTML=`
+            <div class="building-info">
+                <strong>${b.name}</strong>
+                <span>CPS: ${b.baseCps}</span>
+                <span>Owned: ${b.count}</span>
+            </div>
+            <div>Cost: ${formatNumber(b.cost)}</div>`;
+        div.onclick=()=>buyBuilding(i);
+        buildingsPanel.appendChild(div);
+    });
+}
+
+// Buy Building
+function buyBuilding(i){
+    const b=buildings[i];
+    if(cookies>=b.cost){
+        cookies-=b.cost;
+        b.count++;
+        b.cost=Math.floor(b.cost*1.15);
+        updateCPS();
+        updateDisplay();
+        updateBuildings();
+        saveGame();
+    }
+}
+
+// Cookie Click
+cookieImg.onclick= (e)=>{
+    const now=Date.now();
+    if(now-lastClickTime>=100){
+        cookies++;
+        updateDisplay();
+        clickSound.currentTime=0;
+        clickSound.play();
+        lastClickTime=now;
+        const floating=document.createElement('div');
+        floating.className='floating-text';
+        floating.innerText='+1';
+        document.body.appendChild(floating);
+        const rect=cookieImg.getBoundingClientRect();
+        floating.style.left=(e.clientX)+'px';
+        floating.style.top=(e.clientY)+'px';
+        setTimeout(()=>floating.remove(),1000);
+    }
+}
+
+// Auto CPS increment
+setInterval(()=>{cookies+=cps/10; updateDisplay();},100);
+
+// Auto-save every 5 seconds
+setInterval(saveGame,5000);
+
+// Init
+loadGame();
+updateBuildings();
+updateDisplay();
+</script>
 </body>
 </html>
