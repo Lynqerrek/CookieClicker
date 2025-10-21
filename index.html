@@ -10,12 +10,11 @@
         padding: 0;
         background: url('Background.jfif') no-repeat center center fixed;
         background-size: cover;
-        font-family: Arial, sans-serif;
+        font-family: 'Arial', sans-serif;
         color: #333;
     }
     #game-container {
         display: flex;
-        flex-direction: row;
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
@@ -34,7 +33,7 @@
     #cookie {
         width: 200px;
         cursor: pointer;
-        transition: transform 0.1s;
+        transition: transform 0.1s ease;
     }
     #cookie:active {
         transform: scale(0.9) rotate(-5deg);
@@ -102,7 +101,12 @@ const buildings = [
     { name: "Shipment", cost: 1400000, cps: 1400, count: 0 },
     { name: "Alchemy Lab", cost: 20000000, cps: 7800, count: 0 },
     { name: "Portal", cost: 330000000, cps: 44000, count: 0 },
-    { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 }
+    { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 },
+    { name: "Antimatter Condenser", cost: 75000000000, cps: 1400000, count: 0 },
+    { name: "Prism", cost: 1000000000000, cps: 7800000, count: 0 },
+    { name: "Chancemaker", cost: 14000000000000, cps: 44000000, count: 0 },
+    { name: "Fractal Engine", cost: 200000000000000, cps: 260000000, count: 0 },
+    { name: "Javascript Console", cost: 3300000000000000, cps: 1400000000, count: 0 }
 ];
 
 let cookies = 0;
@@ -114,9 +118,9 @@ const buildingsPanel = document.getElementById('buildings-panel');
 
 // Short number formatting
 function formatNumber(num) {
-    if (num >= 1e9) return (num/1e9).toFixed(1)+'B';
-    if (num >= 1e6) return (num/1e6).toFixed(1)+'M';
-    if (num >= 1e3) return (num/1e3).toFixed(1)+'k';
+    if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+    if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+    if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
     return Math.floor(num);
 }
 
@@ -129,6 +133,7 @@ function updateBuildings() {
             <div class="building-info">
                 <strong>${b.name}</strong>
                 <span>Owned: ${b.count}</span>
+                <span>CPS: ${formatNumber(b.cps * b.count)}</span>
             </div>
             <div>Cost: ${formatNumber(b.cost)}</div>
         `;
