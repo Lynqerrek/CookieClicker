@@ -35,8 +35,8 @@
         cursor: pointer;
         transition: transform 0.1s ease;
     }
-    #cookie:active {
-        transform: scale(0.9) rotate(-5deg);
+    #cookie:hover {
+        transform: scale(1.1);
     }
     #stats {
         font-size: 20px;
@@ -111,10 +111,13 @@ const buildings = [
 
 let cookies = 0;
 let cps = 0;
+let lastClickTime = 0;
 
 const cookiesSpan = document.getElementById('cookies');
 const cpsSpan = document.getElementById('cps');
+const cookieImg = document.getElementById('cookie');
 const buildingsPanel = document.getElementById('buildings-panel');
+const clickSound = new Audio('ClickSound.mp3');
 
 // Short number formatting
 function formatNumber(num) {
@@ -163,10 +166,16 @@ function updateDisplay() {
     cpsSpan.innerText = formatNumber(cps);
 }
 
-document.getElementById('cookie').onclick = () => {
-    cookies++;
-    updateDisplay();
-}
+cookieImg.onclick = () => {
+    const currentTime = Date.now();
+    if (currentTime - lastClickTime >= 100) {
+        cookies++;
+        updateDisplay();
+        clickSound.currentTime = 0;
+        clickSound.play();
+        lastClickTime = currentTime;
+    }
+};
 
 setInterval(() => {
     cookies += cps / 10;
@@ -178,3 +187,4 @@ updateDisplay();
 </script>
 </body>
 </html>
+
