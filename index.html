@@ -5,106 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie Clicker Clone</title>
     <style>
-        /* Loading Screen */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Main Game Styles */
+        /* General Styles */
         body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             background: url('Background.jfif') no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Arial', sans-serif;
-            color: #333;
-            display: none;
-        }
-        #game-container {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
-            gap: 20px;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
+
+        /* Game Container */
+        #game-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 80%;
+            height: 80%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Left Panel */
         #left-panel {
-            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 30%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
+
+        /* Cookie Container */
         #cookie-container {
             position: relative;
             margin-bottom: 20px;
         }
+
         #cookie {
             width: 200px;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            transition: transform 0.1s ease;
         }
+
         #cookie:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
+
+        /* Stats */
         #stats {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 10px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px 20px;
-            border-radius: 15px;
         }
+
+        /* Buildings Panel */
         #buildings-panel {
-            flex: 1;
-            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px;
+            align-items: flex-start;
+            width: 65%;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             overflow-y: auto;
-            height: 600px;
+            height: 100%;
         }
+
         .building {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #fff5e6;
+            width: 100%;
             padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.2s;
+            transition: background 0.3s ease;
         }
+
         .building:hover {
-            transform: scale(1.03);
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+            background: #f1f1f1;
         }
+
         .building-info {
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
         }
+
+        .building-info span {
+            font-size: 14px;
+        }
+
+        /* Floating Text */
         .floating-text {
             position: absolute;
             top: 50%;
@@ -114,6 +119,7 @@
             color: #ffcc00;
             animation: floatUp 2s forwards;
         }
+
         @keyframes floatUp {
             0% {
                 opacity: 1;
@@ -127,21 +133,19 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Main Game Content -->
     <div id="game-container">
+        <!-- Left Panel -->
         <div id="left-panel">
             <div id="cookie-container">
                 <img id="cookie" src="Cookie.webp" alt="Cookie">
             </div>
             <div id="stats">
-                Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0.1</span>
+                <div>Cookies: <span id="cookies">0</span></div>
+                <div>CPS: <span id="cps">0.0</span></div>
             </div>
         </div>
+
+        <!-- Buildings Panel -->
         <div id="buildings-panel"></div>
     </div>
 
@@ -245,12 +249,6 @@
 
         updateBuildings();
         updateDisplay();
-
-        // Show loading screen until everything is loaded
-        window.onload = () => {
-            document.body.style.display = 'block';
-            document.getElementById('loading-screen').style.display = 'none';
-        };
     </script>
 </body>
 </html>
