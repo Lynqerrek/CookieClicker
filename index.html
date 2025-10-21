@@ -1,190 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cookie Clicker Clone</title>
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: url('Background.jfif') no-repeat center center fixed;
-        background-size: cover;
-        font-family: 'Arial', sans-serif;
-        color: #333;
-    }
-    #game-container {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 20px;
-        gap: 20px;
-    }
-    #left-panel {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    #cookie-container {
-        position: relative;
-        margin-bottom: 20px;
-    }
-    #cookie {
-        width: 200px;
-        cursor: pointer;
-        transition: transform 0.1s ease;
-    }
-    #cookie:hover {
-        transform: scale(1.1);
-    }
-    #stats {
-        font-size: 20px;
-        margin-bottom: 20px;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.7);
-        padding: 10px 20px;
-        border-radius: 15px;
-    }
-    #buildings-panel {
-        flex: 1;
-        max-width: 400px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        background: rgba(255, 255, 255, 0.7);
-        padding: 15px;
-        border-radius: 15px;
-        overflow-y: auto;
-        height: 600px;
-    }
-    .building {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #fff5e6;
-        padding: 10px;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: transform 0.1s, box-shadow 0.2s;
-    }
-    .building:hover {
-        transform: scale(1.03);
-        box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
-    }
-    .building-info {
-        display: flex;
-        flex-direction: column;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker Clone</title>
+    <style>
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #3498db;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Game Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('Background.jfif') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            display: none; /* Hide content initially */
+        }
+        #game-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 20px;
+        }
+        #left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #cookie-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        #cookie {
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        #cookie:hover {
+            transform: scale(1.1);
+        }
+        #stats {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 15px;
+        }
+        #buildings-panel {
+            flex: 1;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 15px;
+            overflow-y: auto;
+            height: 600px;
+        }
+        .building {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff5e6;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+        .building:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+        }
+        .building-info {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 <body>
-<div id="game-container">
-    <div id="left-panel">
-        <div id="cookie-container">
-            <img id="cookie" src="Cookie.webp" alt="Cookie">
-        </div>
-        <div id="stats">
-            Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0</span>
-        </div>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader"></div>
     </div>
-    <div id="buildings-panel"></div>
-</div>
 
-<script>
-const buildings = [
-    { name: "Cursor", cost: 15, cps: 0.1, count: 0 },
-    { name: "Grandma", cost: 100, cps: 1, count: 0 },
-    { name: "Farm", cost: 1100, cps: 8, count: 0 },
-    { name: "Factory", cost: 12000, cps: 47, count: 0 },
-    { name: "Mine", cost: 130000, cps: 260, count: 0 },
-    { name: "Shipment", cost: 1400000, cps: 1400, count: 0 },
-    { name: "Alchemy Lab", cost: 20000000, cps: 7800, count: 0 },
-    { name: "Portal", cost: 330000000, cps: 44000, count: 0 },
-    { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 },
-    { name: "Antimatter Condenser", cost: 75000000000, cps: 1400000, count: 0 },
-    { name: "Prism", cost: 1000000000000, cps: 7800000, count: 0 },
-    { name: "Chancemaker", cost: 14000000000000, cps: 44000000, count: 0 },
-    { name: "Fractal Engine", cost: 200000000000000, cps: 260000000, count: 0 },
-    { name: "Javascript Console", cost: 3300000000000000, cps: 1400000000, count: 0 }
-];
-
-let cookies = 0;
-let cps = 0;
-let lastClickTime = 0;
-
-const cookiesSpan = document.getElementById('cookies');
-const cpsSpan = document.getElementById('cps');
-const cookieImg = document.getElementById('cookie');
-const buildingsPanel = document.getElementById('buildings-panel');
-const clickSound = new Audio('ClickSound.mp3');
-
-// Short number formatting
-function formatNumber(num) {
-    if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
-    if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
-    if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
-    return Math.floor(num);
-}
-
-function updateBuildings() {
-    buildingsPanel.innerHTML = '';
-    buildings.forEach((b, index) => {
-        const div = document.createElement('div');
-        div.className = 'building';
-        div.innerHTML = `
-            <div class="building-info">
-                <strong>${b.name}</strong>
-                <span>Owned: ${b.count}</span>
-                <span>CPS: ${formatNumber(b.cps * b.count)}</span>
+    <!-- Main Game Content -->
+    <div id="game-container">
+        <div id="left-panel">
+            <div id="cookie-container">
+                <img id="cookie" src="Cookie.webp" alt="Cookie">
             </div>
-            <div>Cost: ${formatNumber(b.cost)}</div>
-        `;
-        div.onclick = () => buyBuilding(index);
-        buildingsPanel.appendChild(div);
-    });
-}
+            <div id="stats">
+                Cookies: <span id="cookies">0</span> | CPS: <span id="cps">0</span>
+            </div>
+        </div>
+        <div id="buildings-panel"></div>
+    </div>
 
-function buyBuilding(index) {
-    const b = buildings[index];
-    if (cookies >= b.cost) {
-        cookies -= b.cost;
-        b.count++;
-        b.cost = Math.floor(b.cost * 1.15);
-        updateCPS();
-        updateDisplay();
+    <script>
+        const buildings = [
+            { name: "Cursor", cost: 15, cps: 0.1, count: 0 },
+            { name: "Grandma", cost: 100, cps: 1, count: 0 },
+            { name: "Farm", cost: 1100, cps: 8, count: 0 },
+            { name: "Factory", cost: 12000, cps: 47, count: 0 },
+            { name: "Mine", cost: 130000, cps: 260, count: 0 },
+            { name: "Shipment", cost: 1400000, cps: 1400, count: 0 },
+            { name: "Alchemy Lab", cost: 20000000, cps: 7800, count: 0 },
+            { name: "Portal", cost: 330000000, cps: 44000, count: 0 },
+            { name: "Time Machine", cost: 5100000000, cps: 260000, count: 0 },
+            { name: "Antimatter Condenser", cost: 75000000000, cps: 1400000, count: 0 },
+            { name: "Prism", cost: 1000000000000, cps: 7800000, count: 0 },
+            { name: "Chancemaker", cost: 14000000000000, cps: 44000000, count: 0 },
+            { name: "Fractal Engine", cost: 200000000000000, cps: 260000000, count: 0 },
+            { name: "Javascript Console", cost: 3300000000000000, cps: 1400000000, count: 0 }
+        ];
+
+        let cookies = 0;
+        let cps = 0;
+        let lastClickTime = 0;
+
+        const cookiesSpan = document.getElementById('cookies');
+        const cpsSpan = document.getElementById('cps');
+        const cookieImg = document.getElementById('cookie');
+        const buildingsPanel = document.getElementById('buildings-panel');
+        const clickSound = new Audio('ClickSound.mp3');
+
+        // Short number formatting
+        function formatNumber(num) {
+            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'k';
+            return Math.floor(num);
+        }
+
+        function updateBuildings() {
+            buildingsPanel.innerHTML = '';
+            buildings.forEach((b, index) => {
+                const div = document.createElement('div');
+                div.className = 'building';
+                div.innerHTML = `
+                    <div class="building-info">
+                        <strong>${b.name}</strong>
+                        <span>Owned: ${b.count}</span>
+                        <span>CPS: ${formatNumber(b.cps * b.count)}</span>
+                    </div>
+                    <div>Cost: ${formatNumber(b.cost)}</div>
+                `;
+                div.onclick = () => buyBuilding(index);
+                buildingsPanel.appendChild(div);
+            });
+        }
+
+        function buyBuilding(index) {
+            const b = buildings[index];
+            if (cookies >= b.cost) {
+                cookies -= b.cost;
+                b.count++;
+                b.cost = Math.floor(b.cost * 1.15);
+                updateCPS();
+                updateDisplay();
+                updateBuildings();
+            }
+        }
+
+        function updateCPS() {
+            cps = buildings.reduce((sum, b) => sum + b.cps * b.count, 0);
+        }
+
+        function updateDisplay() {
+            cookiesSpan.innerText = formatNumber(cookies);
+            cpsSpan.innerText = formatNumber(cps);
+        }
+
+        cookieImg.onclick = () => {
+            const currentTime = Date.now();
+            if (currentTime - lastClickTime >= 100) {
+                cookies++;
+                updateDisplay();
+                clickSound.currentTime = 0;
+                clickSound.play();
+                lastClickTime = currentTime;
+            }
+        };
+
+        setInterval(() => {
+            cookies += cps / 10;
+            updateDisplay();
+        }, 100);
+
         updateBuildings();
-    }
-}
-
-function updateCPS() {
-    cps = buildings.reduce((sum, b) => sum + b.cps * b.count, 0);
-}
-
-function updateDisplay() {
-    cookiesSpan.innerText = formatNumber(cookies);
-    cpsSpan.innerText = formatNumber(cps);
-}
-
-cookieImg.onclick = () => {
-    const currentTime = Date.now();
-    if (currentTime - lastClickTime >= 100) {
-        cookies++;
         updateDisplay();
-        clickSound.currentTime = 0;
-        clickSound.play();
-        lastClickTime = currentTime;
-    }
-};
 
-setInterval(() => {
-    cookies += cps / 10;
-    updateDisplay();
-}, 100);
-
-updateBuildings();
-updateDisplay();
-</script>
+        // Show loading screen until everything is loaded
+        window.onload = () => {
+            document.body.style.display = 'block'; // Show the game content
+            document.getElementById('loading-screen').style.display = 'none'; // Hide the loading screen
+        };
+    </script>
 </body>
 </html>
-
